@@ -4,6 +4,8 @@ Jogo **idle / de gerenciamento de colônia** em 2D isométrico, feito com HTML5 
 
 A colônia começa com um módulo de pouso, dois trechos de duto e um painel solar. A partir daí, o jogador precisa equilibrar **oxigênio, água, energia, alimentos e minérios**, expandir a rede de módulos e manter a tripulação viva — enquanto a produção continua mesmo com a aba fechada.
 
+**▶ Jogue online:** <https://marciomoura2022.github.io/colonia-42-marte/>
+
 ![Mapa isométrico da Colônia 42](docs/screenshot-01-map.png)
 
 ## Destaques
