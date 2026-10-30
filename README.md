@@ -49,7 +49,7 @@ Depois acesse <http://127.0.0.1:8080/>.
 | Ação | Desktop | Mobile |
 | --- | --- | --- |
 | Mover a câmera | Arrastar com o mouse | Arrastar com um dedo |
-| Zoom | Scroll do mouse ou botões `+` / `−` | Pinça ou botões `+` / `−` |
+| Zoom | Scroll do mouse ou botões `+` / `−` | Botões `+` / `−` |
 | Construir | Tecla `B` ou ícone de ferramenta | Ícone de ferramenta |
 | Posicionar módulo | Clicar no mapa | Tocar no mapa |
 | Manter modo de construção | `Shift` + clique | — |
