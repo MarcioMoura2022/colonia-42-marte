@@ -6,6 +6,8 @@ A colônia começa com um módulo de pouso, dois trechos de duto e um painel sol
 
 **▶ Jogue online:** <https://marciomoura2022.github.io/colonia-42-marte/>
 
+**📐 Documentação técnica:** [`docs/ARQUITETURA.md`](docs/ARQUITETURA.md) — arquitetura, simulação, renderização, assets, persistência e dívidas técnicas.
+
 ![Mapa isométrico da Colônia 42](docs/screenshot-01-map.png)
 
 ## Destaques
@@ -149,7 +151,9 @@ O jogo também simula o período em que a aba fica em segundo plano e salva auto
 ├─ tools/
 │  ├─ prepare_assets.py        # Pipeline de recorte e normalização dos sprites
 │  └─ smoke-test.mjs           # Teste de fumaça e captura de screenshots (Playwright)
-└─ docs/                       # Screenshots do README
+└─ docs/
+   ├─ ARQUITETURA.md           # Documento técnico de handoff
+   └─ screenshot-*.png         # Imagens do README
 ```
 
 ### Fluxo de dados
