@@ -1,0 +1,25 @@
+# Dependências e ferramentas locais
+node_modules/
+npm-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Artefatos temporários do pipeline de assets
+assets/_*
+docs/_*
+
+# Sistema / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Logs
+*.log

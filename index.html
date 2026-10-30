@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0d0a09" />
+  <meta
+    name="description"
+    content="Colônia 42 — jogo idle e de gerenciamento de uma colônia em Marte, em 2D isométrico."
+  />
+  <title>Colônia 42 · Marte</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d0a09'/%3E%3Cpath d='M32 8 54 22v20L32 56 10 42V22Z' fill='none' stroke='%23f97316' stroke-width='3'/%3E%3Ctext x='32' y='39' font-family='sans-serif' font-size='18' font-weight='700' fill='%23fbbf24' text-anchor='middle'%3E42%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- ================================================================
+       MAPA
+       O canvas ocupa toda a tela. Toda a cena isométrica é desenhada
+       em js/render/Renderer.js.
+  ================================================================= -->
+  <canvas id="game-canvas" aria-label="Mapa isométrico da colônia em Marte"></canvas>
+
+  <!-- ================================================================
+       HUD SUPERIOR
+       Os chips de recursos são gerados dinamicamente por js/ui/Hud.js
+       a partir de js/config.js (RESOURCES).
+  ================================================================= -->
+  <header class="hud" id="hud">
+    <div class="brand" aria-label="Colônia 42">
+      <div class="brand__mark" aria-hidden="true">
+        <span>42</span>
+      </div>
+      <div class="brand__text">
+        <h1 class="brand__title">COLÔNIA 42</h1>
+        <p class="brand__subtitle">MARTE · SETOR ARES</p>
+      </div>
+    </div>
+
+    <div class="resource-bar" id="resource-bar" role="list" aria-label="Recursos da colônia"></div>
+
+    <div class="hud-stats" id="hud-stats">
+      <div class="stat" id="stat-sol" title="Tempo desde o pouso">
+        <span class="stat__icon" data-icon="sun"></span>
+        <span class="stat__body">
+          <strong class="stat__value" id="sol-value">Sol 1</strong>
+          <span class="stat__label" id="sol-time">06:00</span>
+        </span>
+      </div>
+
+      <div class="stat" id="stat-pop" title="Tripulantes / capacidade habitacional">
+        <span class="stat__icon" data-icon="population"></span>
+        <span class="stat__body">
+          <strong class="stat__value" id="pop-value">4/6</strong>
+          <span class="stat__label">Tripulação</span>
+        </span>
+      </div>
+
+      <div class="stat" id="stat-morale" title="Moral da colônia">
+        <span class="stat__icon" data-icon="mood"></span>
+        <span class="stat__body">
+          <strong class="stat__value" id="morale-value">62%</strong>
+          <span class="stat__label">Moral</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="hud-controls" aria-label="Controles do jogo">
+      <div class="speed-group" role="group" aria-label="Velocidade da simulação">
+        <button class="icon-btn" id="btn-pause" type="button" title="Pausar (Espaço)" aria-label="Pausar">
+          <span data-icon="pause"></span>
+        </button>
+        <button class="speed-btn" type="button" data-speed="1" title="Velocidade normal">1×</button>
+        <button class="speed-btn" type="button" data-speed="2" title="Velocidade 2×">2×</button>
+        <button class="speed-btn" type="button" data-speed="4" title="Velocidade 4×">4×</button>
+        <button class="speed-btn speed-cycle" id="btn-speed-cycle" type="button" title="Alterar velocidade" aria-label="Alterar velocidade">1×</button>
+      </div>
+      <button class="icon-btn" id="btn-build-toggle" type="button" title="Abrir/fechar construção (B)" aria-label="Construção">
+        <span data-icon="build"></span>
+      </button>
+      <button class="icon-btn" id="btn-help" type="button" title="Ajuda e opções" aria-label="Ajuda">
+        <span data-icon="help"></span>
+      </button>
+      <span class="save-flash" id="save-flash" aria-live="polite">SALVO</span>
+    </div>
+  </header>
+
+  <!-- Aviso crítico (apagão, falta de oxigênio etc.) -->
+  <div class="alert-banner" id="alert-banner" role="status" aria-live="polite"></div>
+
+  <!-- ================================================================
+       MENU LATERAL DE CONSTRUÇÃO
+       As categorias e os cards são gerados por js/ui/BuildMenu.js.
+  ================================================================= -->
+  <aside class="build-panel is-open" id="build-panel" aria-label="Central de construção">
+    <header class="build-panel__header">
+      <div>
+        <p class="eyebrow">CENTRAL DE CONSTRUÇÃO</p>
+        <h2>Módulos</h2>
+      </div>
+      <button class="icon-btn build-panel__close" id="btn-panel-close" type="button" title="Fechar" aria-label="Fechar painel">
+        <span data-icon="close"></span>
+      </button>
+    </header>
+
+    <div class="category-filter" id="category-filter" role="tablist" aria-label="Filtrar módulos"></div>
+
+    <div class="build-list" id="build-list"></div>
+
+    <footer class="build-panel__footer">
+      <p>
+        <span class="dot dot--orange"></span>
+        Construa conectado à rede. Dutos dão <strong>+3%</strong> de eficiência por adjacência.
+      </p>
+    </footer>
+  </aside>
+
+  <div class="panel-scrim" id="panel-scrim" hidden></div>
+
+  <!-- Inspetor do prédio selecionado -->
+  <section class="inspector" id="inspector" hidden aria-label="Detalhes do módulo"></section>
+
+  <!-- Barra de posicionamento (aparece ao escolher um módulo) -->
+  <div class="placement-bar" id="placement-bar" hidden></div>
+
+  <!-- Notificações -->
+  <div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+  <!-- Dica de controles -->
+  <div class="controls-hint" id="controls-hint">
+    <span><kbd>Arraste</kbd> mover</span>
+    <span><kbd>Scroll</kbd> zoom</span>
+    <span><kbd>B</kbd> construir</span>
+    <span><kbd>Espaço</kbd> pausar</span>
+  </div>
+
+  <!-- Modais -->
+  <div class="modal-root" id="modal-root"></div>
+
+  <!-- ================================================================
+       TELA DE CARREGAMENTO
+  ================================================================= -->
+  <div class="loading" id="loading">
+    <div class="loading__inner">
+      <div class="loading__logo">
+        <div class="brand__mark brand__mark--large"><span>42</span></div>
+      </div>
+      <h2>COLÔNIA 42</h2>
+      <p class="loading__tagline">Preparando o módulo de pouso…</p>
+      <div class="loading__bar"><i id="loading-progress"></i></div>
+      <p class="loading__status" id="loading-status">Carregando estruturas</p>
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
